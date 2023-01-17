@@ -7,8 +7,12 @@ Employee managment with django and ajax
 - Django
 - Ajax
 
+![home page](https://user-images.githubusercontent.com/64283478/212960084-5bd889bf-bc84-42ab-bbea-94e655dfc136.png)
+
 #### Features
 - Ajax Form of office and employee
+- Showing on the tables
+
 
 #### Resources
 - [JQuery CDN](https://cdnjs.com/libraries/jquery)
