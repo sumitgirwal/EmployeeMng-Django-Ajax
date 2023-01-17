@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmpMng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
@@ -15,26 +16,170 @@
     </style>
 </head>
 <body>
-    <form action="" method="POST" id="employeeForm">
-        <h1>Employee Form</h1>
-        {% csrf_token %}
-        {{ empform.as_p }}
-        <input type="submit" value="Save">
-    </form>
+    {% load crispy_forms_tags %}
+    <div class="container">
+ 
+
+        
+    <div class="row mt-5">
+        <div class="col-5 border p-4 rounded">
+            <form action="" method="POST" id="employeeForm">
+                <h1>Employee Form</h1>
+                {% csrf_token %}
+                {{ empform|crispy }}
+                <input class="btn btn-primary mt-2" type="submit" value="Save Employee">
+            </form>
+        </div>
+        <div class="col-7 border p-4 rounded">
+            <table class="table" id="employeeTable">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Office</th>
+                  </tr>
+                </thead>
+                <tbody id="employeeTableBody">
+                </tbody>
+              </table>
+        </div>
+    </div>
+
     <hr>
-    <form action="" method="POST" id="officeForm">
-        <h1>Office Form</h1>
-        {% csrf_token %}
-        {{ officeform.as_p }}
-        <input type="submit" value="Save">
-    </form>
+
+     <div class="row mb-5">
+        <div class="col-5 border p-4 rounded">
+            <form action="" method="POST" id="officeForm">
+                <h1>Office Form</h1>
+                {% csrf_token %}
+                {{ officeform|crispy }}
+                <input class="btn btn-primary mt-2" type="submit" value="Save Office">
+            </form>
+        </div>
+        <div class="col-7 border p-4 rounded">
+            <table class="table" id="officeTable">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Location</th>
+                  </tr>
+                </thead>
+                <tbody id="officeTableBody">
+                </tbody>
+              </table>
+        </div>
+    </div>
+  
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>
 
 <script>
-    $(document).ready(function(){
 
+    var officeList = []
+    var employeeList = []
+    $(document).ready(function(){
+        getAllOffices()
+        getAllEmployees()
     })
+
+    function getAllOffices() {
+        console.log("getting data from server....")
+        $.ajax({
+            method: "GET",
+            url: "/offices"
+        })
+        .done(
+            function (response) {
+                const tempOffices = JSON.parse(response)
+                officeList = tempOffices;
+                officeList = officeList.map(e => e.fields)
+                renderOfficeTable()
+            }
+        )
+    }
+
+    function getAllEmployees() {
+        console.log("getting data from server....")
+        $.ajax({
+            method: "GET",
+            url: "/employees"
+        })
+        .done(
+            function (response) {
+                
+                const tempEmployees = JSON.parse(response)
+                employeeList = tempEmployees;
+                employeeList = employeeList.map(e => e.fields)
+                renderEmployeeTable()
+            }
+        )
+    }
+
+    function renderOfficeTable() {
+        console.log("in render table", officeList)
+        let tableBody = document.getElementById("officeTableBody")
+        tableBody.remove()
+
+        let newBody = document.createElement("tbody");
+        newBody.id = "officeTableBody"
+        document.getElementById("officeTable").append(newBody)
+
+
+
+        officeList.forEach(
+            function (office, index) {
+
+                const row = newBody.insertRow()
+                const count = document.createElement("TD")
+                count.innerHTML = index + 1
+                const name = document.createElement("TD")
+                name.innerHTML = office.name
+                const location = document.createElement("TD")
+                location.innerHTML = office.location
+                row.appendChild(count)
+                row.appendChild(name)
+                row.appendChild(location)
+            }
+        )
+    }
+
+    function renderEmployeeTable() {
+         
+        let tableBody = document.getElementById("employeeTableBody")
+        tableBody.remove()
+
+        let newBody = document.createElement("tbody");
+        newBody.id = "employeeTableBody"
+        document.getElementById("employeeTable").append(newBody)
+
+        console.log("this is the best....")
+        console.log(employeeList)
+
+        employeeList.forEach(
+            function (employee, index) {
+                const row = newBody.insertRow()
+                const count = document.createElement("TD")
+                count.innerHTML = index + 1
+                const fname = document.createElement("TD")
+                fname.innerHTML = employee.fname
+                const lname = document.createElement("TD")
+                lname.innerHTML = employee.lname
+                const office = document.createElement("TD")
+                office.innerHTML = employee.office.name
+                row.appendChild(count)
+                row.appendChild(fname)
+                row.appendChild(lname)
+                row.appendChild(office)
+            }
+        )
+    }
 
     function officeForm(event) {
         // not refresh page
@@ -66,6 +211,7 @@
         .done(function(response) {
             console.log(response);
             event.target.reset()
+            getAllOffices()
         })
         .fail(function(error){
             
@@ -96,6 +242,7 @@
         .done(function(response) {
             console.log(response);
             event.target.reset()
+            getAllEmployees()
         })
         .fail(function(error){
             

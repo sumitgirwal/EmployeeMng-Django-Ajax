@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # install 
+    "crispy_forms",
+    "crispy_bootstrap5",
+
+    # application
     'empapp'
 ]
 
@@ -71,6 +76,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'EmpMng.wsgi.application'
 
+# forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -123,3 +132,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ 

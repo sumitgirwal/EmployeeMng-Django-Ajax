@@ -52,3 +52,20 @@ def employeeCrud(request):
                 'error':form.errors
             }
             return JsonResponse(model_to_dict(form.errors), safe=False)
+
+
+def offices(request):
+    office = Office.objects.all()
+    return JsonResponse(serializers.serialize("json", office), safe=False)
+
+def employees(request):
+    employee = Employee.objects.all()
+    return JsonResponse(serializers.serialize("json", employee, use_natural_foreign_keys=True), safe=False)
+
+def showEmployeePage(request):
+    context = { "employeeForm" : EmployeeForm() }
+    return render(request, 'employee.html' , context)
+
+def showOfficePage(request):
+    context = { "officeForm" : OfficeForm() }
+    return render(request, 'office.html' , context)

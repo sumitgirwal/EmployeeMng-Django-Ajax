@@ -1,4 +1,6 @@
 from django.db import models
+from django.forms.models import model_to_dict
+
 
 # Create your models here.
 class Office(models.Model):
@@ -7,6 +9,9 @@ class Office(models.Model):
 
     def __str__(self):
         return f"{self.name} | {self.location}"
+    
+    def natural_key(self):
+        return model_to_dict(self)
 
 class Employee(models.Model):
     fname = models.CharField(max_length=200)
