@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmpMng</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="POST" id="employeeForm">
+        <h1>Employee Form</h1>
+        {% csrf_token %}
+        {{ empform.as_p }}
+        <input type="submit" value="Save">
+    </form>
+    <hr>
+    <form action="" method="POST" id="officeForm">
+        <h1>Office Form</h1>
+        {% csrf_token %}
+        {{ officeform.as_p }}
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>
+
+<script>
+    $(document).ready(function(){
+
+    })
+
+    function officeForm(event) {
+        // not refresh page
+        event.preventDefault();
+
+        // serialize form data
+        const formValueArray = $(this).serializeArray()
+        
+        // change data formate
+        const data = {}
+        // formValueArray.forEach(e => {
+        //     data[e.name] = e.value
+        // })
+        
+        // OR use reduce
+        formValueArray.reduce((data, e) => {
+            data[e.name] = e.value
+            return data
+        }, data)
+        
+         
+
+
+        $.ajax({
+            method: "POST",
+            url: "/office",
+            data: data
+        })
+        .done(function(response) {
+            console.log(response);
+            event.target.reset()
+        })
+        .fail(function(error){
+            
+            console.log(error)
+        })
+    }
+
+    function employeeForm(event) {
+        // not refresh page
+        event.preventDefault();
+
+        // serialize form data
+        const formValueArray = $(this).serializeArray()
+        
+        // change data formate
+        const data = {}
+
+        formValueArray.reduce((data, e) => {
+            data[e.name] = e.value
+            return data
+        }, data)
+
+        $.ajax({
+            method: "POST",
+            url: "/employee",
+            data: data
+        })
+        .done(function(response) {
+            console.log(response);
+            event.target.reset()
+        })
+        .fail(function(error){
+            
+            console.log(error)
+        })
+    }
+
+    $("#officeForm").submit(officeForm)
+    $("#employeeForm").submit(employeeForm)
+</script>
