@@ -1,5 +1,7 @@
 # EmployeeMng-Django-Ajax
-Employee managment with django and ajax
+Employee management with Django and Ajax is a web-based application that allows companies or organizations to manage their employee records and information in a streamlined and efficient way.
+
+The application is built using the Django web framework and Ajax, which allows for seamless data communication and real-time updates without the need for page reloading.
 
 #### Buit With
 - Html 
